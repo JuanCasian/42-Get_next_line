@@ -15,7 +15,7 @@
 
 int		main(int ac, char **av)
 {
-	int		fd;
+	int		fd[10];
 	int		i;
 	char	*str;
 	int		res;
@@ -23,13 +23,32 @@ int		main(int ac, char **av)
 	i = 1;
 	if (ac > 1)
 	{
-		if ((fd = open(av[i], O_RDONLY)) < 0)
+		while (i < ac)
 		{
-			ft_putendl("Error openning file");
-			return (-1);
+			if ((fd[i] = open(av[i], O_RDONLY)) < 0)
+			{
+				ft_putendl("Error openning file");
+				return (-1);
+			}
+			res = get_next_line(fd[i], &str);
+			ft_putendl(str);
+			res = get_next_line(fd[i], &str);
+			ft_putendl(str);
+			res = get_next_line(fd[i], &str);
+			ft_putendl(str);
+		i++;
 		}
-		res = get_next_line(fd, &str);
-		ft_putendl(str);
+		i--;
+		while (i > 0)
+		{
+			res = get_next_line(fd[i], &str);
+			ft_putendl(str);
+			res = get_next_line(fd[i], &str);
+			ft_putendl(str);
+		i--;
+		}
+
 	}
+
 	return (0);
 }
