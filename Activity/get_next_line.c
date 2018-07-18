@@ -6,28 +6,18 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/18 12:17:39 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/18 13:07:04 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void    *remalloc(void *ptr, size_t size, size_t curr)
-{
-        void    *newptr;
-
-        if (!(newptr = (void*)malloc(size)))
-                return (NULL);
-        newptr = ft_memcpy(newptr, ptr, curr);
-        return (newptr);
-}
 
 char	*read_file(int fd)
 {
 	char	buf[BUFF_SIZE];
 	char	*str;
 	char	*nstr;
-	int	n;
+	int		n;
 	size_t	len;
 
 	str = NULL;
@@ -83,12 +73,12 @@ t_elem	*known_fd(t_elem *list, int fd)
 
 int		get_str(t_elem *elem, char **line)
 {
-	int		i;
+	size_t		i;
 
 	i = 0;
 	while (elem->str[i] && elem->str[i] != '\n')
 		i++;
-	if (!(*line = (char*)malloc(sizeof(char) * i + 1)))
+	if (!(*line = ft_strnew(i)))
 		return (-1);
 	i = 0;
 	while (elem->str[i] && elem->str[i] != '\n')
@@ -98,7 +88,7 @@ int		get_str(t_elem *elem, char **line)
 	}
 	elem->str = elem->str + i;
 	line[0][i] = '\0';
-	if (!(elem->str[0]))
+	if (!(elem->str[0]) && !(**line))
 		return (0);
 	elem->str++;
 	return (1);
@@ -109,6 +99,8 @@ int		get_next_line(const int fd, char **line)
 	static t_elem	*list;
 	t_elem			*curr;
 
+	if (fd < 0)
+		return (-1);
 	if (list)
 		if ((curr = known_fd(list, fd)))
 			return (get_str(curr, line));
