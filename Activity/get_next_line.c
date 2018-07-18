@@ -6,7 +6,7 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/17 21:37:48 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/18 12:17:39 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,24 @@ void    *remalloc(void *ptr, size_t size, size_t curr)
 char	*read_file(int fd)
 {
 	char	buf[BUFF_SIZE];
+	char	*str;
+	char	*nstr;
 	int		n;
 	size_t	len;
-	char	*str;
-	int		flag;
 
-	len = 0;
 	str = NULL;
-	flag = 0;
+	len = 0;
 	while ((n = read(fd, buf, BUFF_SIZE)))
 	{
 		if (n < 0)
 			return (NULL);
-		str = (char*)remalloc((void*)str, len + n + 1, len);
-		if (!str)
+		if (!(nstr = ft_strnew(len + n)))
 			return (NULL);
-		str = (char*)ft_memcpy(&str[len], buf, n);
+		nstr = ft_strncat(nstr, str, len);
+		nstr = ft_strncat(nstr, (char*)buf, n);
+		free((void*)str);
+		str = nstr;
 		len += n;
-		flag++;
-		str[len] = '\0';
 	}
 	if (!flag)
 		return (NULL);
@@ -96,11 +95,11 @@ int		get_str(t_elem *elem, char **line)
 	i = 0;
 	while (elem->str[i] && elem->str[i] != '\n')
 	{
-		*line[i] = elem->str[i];
+		line[0][i] = elem->str[i];
 		i++;
 	}
 	elem->str = elem->str + i;
-	*line[i] = '\0';
+	line[0][i] = '\0';
 	if (!(elem->str[0]))
 		return (0);
 	elem->str++;
