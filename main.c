@@ -6,7 +6,7 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 20:55:16 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/18 13:12:13 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/18 15:41:39 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,8 @@ int		main(int ac, char **av)
 			}
 			res = get_next_line(fd[i], &str);
 			ft_putendl(str);
-			res = get_next_line(fd[i], &str);
-			ft_putendl(str);
-			res = get_next_line(fd[i], &str);
-			ft_putendl(str);
-		i++;
+			i++;
 		}
-		i--;
-		while (i > 0)
-		{
-			res = get_next_line(fd[i], &str);
-			ft_putendl(str);
-			res = get_next_line(fd[i], &str);
-			ft_putendl(str);
-		i--;
-		}
-
 	}
-	while(1);
 	return (0);
 }
