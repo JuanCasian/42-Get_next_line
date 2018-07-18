@@ -6,7 +6,7 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/18 13:07:04 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/18 14:07:44 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int		get_str(t_elem *elem, char **line)
 	i = 0;
 	while (elem->str[i] && elem->str[i] != '\n')
 		i++;
+	*line = NULL;
 	if (!(*line = ft_strnew(i)))
 		return (-1);
 	i = 0;
