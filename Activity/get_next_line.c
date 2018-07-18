@@ -6,11 +6,21 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/17 20:53:14 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/17 21:37:48 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void    *remalloc(void *ptr, size_t size, size_t curr)
+{
+        void    *newptr;
+
+        if (!(newptr = (void*)malloc(size)))
+                return (NULL);
+        newptr = ft_memcpy(newptr, ptr, curr);
+        return (newptr);
+}
 
 char	*read_file(int fd)
 {
@@ -18,23 +28,25 @@ char	*read_file(int fd)
 	int		n;
 	size_t	len;
 	char	*str;
-	void	*newptr;
+	int		flag;
 
 	len = 0;
 	str = NULL;
+	flag = 0;
 	while ((n = read(fd, buf, BUFF_SIZE)))
 	{
 		if (n < 0)
 			return (NULL);
-		if (!(newptr = (void*)malloc(len + n + 1)))
+		str = (char*)remalloc((void*)str, len + n + 1, len);
+		if (!str)
 			return (NULL);
-		newptr = ft_memcpy(newptr, (void*)str, len);
-		str = (char*)newptr;
-		free(newptr);
-		str = (char*)ft_memcpy((void*)(str + len), (void*)buf, n);
+		str = (char*)ft_memcpy(&str[len], buf, n);
 		len += n;
+		flag++;
 		str[len] = '\0';
 	}
+	if (!flag)
+		return (NULL);
 	return (str);
 }
 
