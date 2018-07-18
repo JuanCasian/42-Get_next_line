@@ -15,25 +15,24 @@
 char	*read_file(int fd)
 {
 	char	buf[BUFF_SIZE];
-	int		n;
-	size_t	len;
 	char	*str;
-	void	*newptr;
+	char	*nstr;
+	int	n;
+	size_t	len;
 
-	len = 0;
 	str = NULL;
+	len = 0;
 	while ((n = read(fd, buf, BUFF_SIZE)))
 	{
 		if (n < 0)
 			return (NULL);
-		if (!(newptr = (void*)malloc(len + n + 1)))
+		if (!(nstr = ft_strnew(len + n)))
 			return (NULL);
-		newptr = ft_memcpy(newptr, (void*)str, len);
-		str = (char*)newptr;
-		free(newptr);
-		str = (char*)ft_memcpy((void*)(str + len), (void*)buf, n);
+		nstr = ft_strncat(nstr, str, len);
+		nstr = ft_strncat(nstr, (char*)buf, n);
+		free((void*)str);
+		str = nstr;
 		len += n;
-		str[len] = '\0';
 	}
 	return (str);
 }
@@ -84,11 +83,11 @@ int		get_str(t_elem *elem, char **line)
 	i = 0;
 	while (elem->str[i] && elem->str[i] != '\n')
 	{
-		*line[i] = elem->str[i];
+		line[0][i] = elem->str[i];
 		i++;
 	}
 	elem->str = elem->str + i;
-	*line[i] = '\0';
+	line[0][i] = '\0';
 	if (!(elem->str[0]))
 		return (0);
 	elem->str++;
