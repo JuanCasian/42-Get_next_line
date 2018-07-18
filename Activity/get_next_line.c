@@ -27,7 +27,7 @@ char	*read_file(int fd)
 	char	buf[BUFF_SIZE];
 	char	*str;
 	char	*nstr;
-	int		n;
+	int	n;
 	size_t	len;
 
 	str = NULL;
@@ -44,8 +44,6 @@ char	*read_file(int fd)
 		str = nstr;
 		len += n;
 	}
-	if (!flag)
-		return (NULL);
 	return (str);
 }
 
