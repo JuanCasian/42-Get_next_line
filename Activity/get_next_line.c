@@ -6,7 +6,7 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/19 14:08:37 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/19 15:14:31 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*read_file(int fd)
 		nstr = ft_strncat(nstr, str, len);
 		nstr = ft_strncat(nstr, (char*)buf, n);
 		if (str)
-			free((void*)str);
+			free(str);
 		str = nstr;
 		len += n;
 	}
@@ -79,7 +79,7 @@ int		get_str(t_elem *elem, char **line)
 	i = 0;
 	while (elem->str[i] && elem->str[i] != '\n')
 		i++;
-	*line = &(elem->str[0]);
+	*line = ft_strndup(elem->str, i);
 	while (i > 0)
 	{
 		elem->str++;
