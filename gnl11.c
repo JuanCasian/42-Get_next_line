@@ -171,6 +171,5 @@ int				main(void)
 	}
 	else
 		printf("An error occured while opening files %s and/or %s\n", filename1, filename2);
-	while(1);
 	return (0);
 }

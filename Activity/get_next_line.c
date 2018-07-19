@@ -6,7 +6,7 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/18 14:23:53 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/19 14:08:37 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ char	*read_file(int fd)
 			return (NULL);
 		nstr = ft_strncat(nstr, str, len);
 		nstr = ft_strncat(nstr, (char*)buf, n);
-		free((void*)str);
+		if (str)
+			free((void*)str);
 		str = nstr;
 		len += n;
 	}
