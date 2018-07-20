@@ -6,108 +6,70 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/19 16:28:05 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/19 21:54:04 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*read_file(int fd)
+static	int	get_new_line(int fd, char **filestrs, char **line)
 {
-	char	buf[BUFF_SIZE];
-	char	*str;
-	char	*nstr;
-	int		n;
-	size_t	len;
+	char		*new_line_address;
+	char		*tmp;
 
-	str = NULL;
-	len = 0;
-	while ((n = read(fd, buf, BUFF_SIZE)))
+	if ((new_line_address = ft_strchr(filestrs[fd], '\n')))
 	{
-		if (n < 0)
-			return (NULL);
-		if (!(nstr = ft_strnew(len + n)))
-			return (NULL);
-		nstr = ft_strncat(nstr, str, len);
-		nstr = ft_strncat(nstr, (char*)buf, n);
-		if (str)
-			free(str);
-		str = nstr;
-		len += n;
+		tmp = filestrs[fd];
+		*new_line_address = '\0';
+		*line = ft_strsub(filestrs[fd], 0, new_line_address - filestrs[fd]);
+		filestrs[fd] = ft_strdup(new_line_address + 1);
+		free(tmp);
+		return (1);
 	}
-	return (str);
+	if (*filestrs[fd])
+	{
+		*line = ft_strnew(ft_strlen(filestrs[fd]));
+		ft_strcpy(*line, filestrs[fd]);
+		filestrs[fd] = ft_memalloc(BUFF_SIZE + 1);
+		return (1);
+	}
+	return (0);
 }
 
-int		add_new_elem(t_elem **list, const int fd)
+static	int	ft_readfile(int fd, char **filestrs)
 {
-	t_elem	*new;
+	char		*buf;
+	char		*tmp;
+	int			i;
 
-	if (!(new = (t_elem*)malloc(sizeof(t_elem))))
-		return (0);
-	new->fd = (int)fd;
-	new->str = read_file(fd);
-	if (!(new->str))
-		return (0);
-	if (*list)
+	buf = ft_strnew(BUFF_SIZE);
+	while ((i = read(fd, buf, BUFF_SIZE)) > 0)
 	{
-		new->next = *list;
-		*list = new;
+		if (!filestrs[fd])
+		{
+			filestrs[fd] = ft_strnew(ft_strlen(buf));
+			ft_strcpy(filestrs[fd], buf);
+		}
+		else
+		{
+			tmp = filestrs[fd];
+			filestrs[fd] = ft_strjoin(filestrs[fd], buf);
+			free(tmp);
+		}
+		ft_memset(buf, 0, BUFF_SIZE);
 	}
-	else
-	{
-		new->next = NULL;
-		*list = new;
-	}
-	return (1);
+	free(buf);
+	return (i);
 }
 
-t_elem	*known_fd(t_elem *list, int fd)
+int			get_next_line(const int fd, char **line)
 {
-	while (list)
-	{
-		if (list->fd == fd)
-			return (list);
-		list = list->next;
-	}
-	return (NULL);
-}
+	static	char	*filestrs[FDS];
 
-int		get_str(t_elem *elem, char **line)
-{
-	int		i;
-	char	*tmp;
-	int		j;
-
-	i = 0;
-	j = -1;
-	while (elem->str[i] != '\n' && elem->str[i])
-		i++;
-	if (!(tmp = (char*)malloc(sizeof(char) * i + 1)))
+	if (!line || fd < 0 || BUFF_SIZE < 0 ||
+			(ft_readfile(fd, &filestrs[fd]) < 0) || fd > FDS)
 		return (-1);
-	while (++j < i)
-		tmp[j] = elem->str[j];
-	tmp[j] = '\0';
-	*line = tmp;
-	free(tmp);
-	while (i-- > 0)
-		elem->str++;
-	if (!(elem->str[0]) && !(**line))
-		return (0);
-	elem->str++;
-	return (1);
-}
-
-int		get_next_line(const int fd, char **line)
-{
-	static t_elem	*list;
-	t_elem			*curr;
-
-	if (fd < 0 || !line || BUFF_SIZE < 0)
-		return (-1);
-	if (list)
-		if ((curr = known_fd(list, fd)))
-			return (get_str(curr, line));
-	if (add_new_elem(&list, fd) == 0)
-		return (-1);
-	return (get_next_line(fd, line));
+	if (get_new_line(fd, &filestrs[fd], line) == 1)
+		return (1);
+	return (0);
 }
