@@ -6,7 +6,7 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:30:24 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/19 15:14:31 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/19 16:28:05 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,22 +74,25 @@ t_elem	*known_fd(t_elem *list, int fd)
 
 int		get_str(t_elem *elem, char **line)
 {
-	size_t		i;
+	int		i;
+	char	*tmp;
+	int		j;
 
 	i = 0;
-	while (elem->str[i] && elem->str[i] != '\n')
+	j = -1;
+	while (elem->str[i] != '\n' && elem->str[i])
 		i++;
-	*line = ft_strndup(elem->str, i);
-	while (i > 0)
-	{
+	if (!(tmp = (char*)malloc(sizeof(char) * i + 1)))
+		return (-1);
+	while (++j < i)
+		tmp[j] = elem->str[j];
+	tmp[j] = '\0';
+	*line = tmp;
+	free(tmp);
+	while (i-- > 0)
 		elem->str++;
-		i--;
-	}
 	if (!(elem->str[0]) && !(**line))
-	{
 		return (0);
-	}
-	elem->str[0] = '\0';
 	elem->str++;
 	return (1);
 }
@@ -99,7 +102,7 @@ int		get_next_line(const int fd, char **line)
 	static t_elem	*list;
 	t_elem			*curr;
 
-	if (fd < 0)
+	if (fd < 0 || !line || BUFF_SIZE < 0)
 		return (-1);
 	if (list)
 		if ((curr = known_fd(list, fd)))

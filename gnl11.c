@@ -156,20 +156,21 @@ int				main(void)
 			printf("-> must have returned '0' at the end of file %s\n", filename1);
 			errors++;
 		}
-
 		ret2 = get_next_line(fd2, &line2);
 		if (ret2 != 0)
 		{
 			printf("-> must have returned '0' at the end of file %s\n", filename2);
 			errors++;
 		}
-
 		close(fd1);
 		close(fd2);
 		if (errors == 0)
+		{
 			printf("OK\n");
+			return (0);
+		}
 	}
 	else
 		printf("An error occured while opening files %s and/or %s\n", filename1, filename2);
-	return (0);
+	return (-1);
 }
