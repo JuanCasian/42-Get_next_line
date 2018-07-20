@@ -6,7 +6,7 @@
 /*   By: jcasian <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:15:34 by jcasian           #+#    #+#             */
-/*   Updated: 2018/07/17 20:48:44 by jcasian          ###   ########.fr       */
+/*   Updated: 2018/07/19 20:30:35 by jcasian          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,8 @@
 
 # define GET_NEXT_LINE_H
 # define BUFF_SIZE 8
+# define FDS 65535
 # include "libft/libft.h"
-
-typedef	struct		s_elem
-{
-	char			*str;
-	int				fd;
-	struct s_elem	*next;
-}					t_elem;
 
 int					get_next_line(const int fd, char **line);
 
